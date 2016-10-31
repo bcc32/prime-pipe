@@ -5,17 +5,16 @@ let nats ~init = Sequence.unfold ~init ~f:(fun s -> Some (s, s + 1)) |> Pipe.of_
 
 let primes () =
   let r, w = Pipe.create () in
-  let stream = ref (nats ~init:2) in
-  let rec loop () =
-    Pipe.read !stream
+  let rec loop stream =
+    Pipe.read stream
     >>> function
     | `Eof -> failwith "got Eof"
     | `Ok n ->
       Pipe.write_if_open w n
       >>> fun () ->
-      stream := Pipe.filter !stream ~f:(fun m -> m mod n <> 0);
-      loop ()
+      let filtered = Pipe.filter stream ~f:(fun m -> m mod n <> 0) in
+      loop filtered
   in
-  loop ();
+  loop (nats ~init:2);
   r
 ;;
