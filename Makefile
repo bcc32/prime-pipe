@@ -1,8 +1,12 @@
 PKGS := core,async
+TARGETS := main.native
 
-.PHONY: all clean
+.PHONY: all clean always
 
-all: main.native
+all: $(TARGETS)
 
-main.native:
+clean:
+	rm -rf _build $(TARGETS)
+
+main.native: always
 	corebuild $@ -pkgs $(PKGS)
