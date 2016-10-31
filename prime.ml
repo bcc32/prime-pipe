@@ -1,7 +1,15 @@
 open Core.Std
 open Async.Std
 
-let nats ~init = Sequence.unfold ~init ~f:(fun s -> Some (s, s + 1)) |> Pipe.of_sequence
+let nats ~init =
+  let r, w = Pipe.create () in
+  let rec loop n =
+    Pipe.write_if_open w n
+    >>> fun () -> loop (n + 1)
+  in
+  loop init;
+  r
+;;
 
 let primes () =
   let r, w = Pipe.create () in
