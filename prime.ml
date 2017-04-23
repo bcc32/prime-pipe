@@ -16,7 +16,7 @@ let primes () =
   let rec loop stream =
     Pipe.read stream
     >>> function
-    | `Eof -> failwith "got Eof"
+    | `Eof -> Pipe.close w
     | `Ok n ->
       Pipe.write_if_open w n
       >>> fun () ->
