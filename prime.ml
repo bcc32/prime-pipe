@@ -1,5 +1,5 @@
-open Core.Std
-open Async.Std
+open Core
+open Async
 
 let nats ~init =
   let r, w = Pipe.create () in

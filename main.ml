@@ -1,5 +1,5 @@
-open Core.Std
-open Async.Std
+open Core
+open Async
 
 let command =
   Command.async' ~summary:"print out prime numbers" begin
